@@ -6,7 +6,6 @@
 
     function lsFile(url){
         this.url = url
-        console.log(url);
         //this.filename = url.substring(url.lastIndexOf("/")+1,url.lastIndexOf("."))
         let domain = location.protocol+'//'+location.host;
         let filepath = url.replace(domain,'');
@@ -18,10 +17,41 @@
 
     lsFile.prototype.init = function(){
         if (this.filetext){
-            this.eval(this.filetext)
+            console.log(this.filename.substring(this.filename.lastIndexOf(".")+1));
+            if (this.filename.substring(this.filename.lastIndexOf(".")+1) == 'css') {
+                this.runcss(this.filetext);
+            }else{
+                this.runjs(this.filetext)
+            }
         }else{
             this.xhr(this.url,this.runstr)
         }
+    }
+
+    lsFile.prototype.runcss = function(_css){
+        var style = document.createElement('style'), //创建一个style元素
+            head = document.head || document.getElementsByTagName('head')[0]; //获取head元素
+        style.type = 'text/css'; //这里必须显示设置style元素的type属性为text/css，否则在ie中不起作用
+        if(style.styleSheet){ //IE
+            var func = function(){
+                try{ //防止IE中stylesheet数量超过限制而发生错误
+                    style.styleSheet.cssText = _css;
+                }catch(e){
+
+                }
+            }
+            //如果当前styleSheet还不能用，则放到异步中则行
+            if(style.styleSheet.disabled){
+                setTimeout(func,10);
+            }else{
+                func();
+            }
+        }else{
+            //w3c浏览器中只要创建文本节点插入到style元素中就行了
+            var textNode = document.createTextNode(_css);
+            style.appendChild(textNode);
+        }
+        head.appendChild(style); //把创建的style元素插入到head中
     }
 
     lsFile.prototype.xhr = function(url,callback){
@@ -44,12 +74,18 @@
                     break;
             }
         }
-        xhr.open('GET',url,false);
+        xhr.open('GET',url, false);
+        //xhr.setRequestHeader("Content-Length", _data.length);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhr.send();
     }
 
     lsFile.prototype.runstr = function(filetext){
-        this.eval(filetext)
+        if (this.filename.substring(this.filename.lastIndexOf(".")+1) == 'css') {
+            this.runcss(filetext);
+        }else{
+            this.runjs(filetext)
+        }
         lstorage.setItem(this.lname,filetext);
         this.removels()
     }
@@ -67,7 +103,7 @@
         }
     }
 
-    lsFile.prototype.eval = function(filetext){
+    lsFile.prototype.runjs = function(filetext){
         window.eval(filetext)
     }
 
