@@ -1,0 +1,15 @@
+/*style.css*/
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body p {
+    width: 40%;
+    margin: 20px auto;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 1.5rem;
+    background-color: #f0fbff;
+    border: 1px solid #c0c0c0;
+}
