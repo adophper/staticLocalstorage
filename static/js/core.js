@@ -1,5 +1,5 @@
 /*https://segmentfault.com/a/1190000005770330*/
-!function(w){
+!function(env){
     'use strict'
 
     var lstorage = window.localStorage
@@ -17,7 +17,6 @@
 
     lsFile.prototype.init = function(){
         if (this.filetext){
-            console.log(this.filename.substring(this.filename.lastIndexOf(".")+1));
             if (this.filename.substring(this.filename.lastIndexOf(".")+1) == 'css') {
                 this.runcss(this.filetext);
             }else{
@@ -47,7 +46,7 @@
                 func();
             }
         }else{
-            //w3c浏览器中只要创建文本节点插入到style元素中就行了
+           //w3c浏览器中只要创建文本节点插入到style元素中就行了
             var textNode = document.createTextNode(_css);
             style.appendChild(textNode);
         }
@@ -107,7 +106,16 @@
         window.eval(filetext)
     }
 
-    w.lsFile = function (url){
-        return new lsFile(url)
+    env.lsFile = function (modules){
+        if (typeof modules == 'object') {
+            for (var i in modules) {
+                // console.log(i);
+                // console.log(modules[i]);
+                new lsFile(i + '?' + modules[i]);
+            }
+        }else{
+            new lsFile(modules);
+        }
+        // return new lsFile(url)
     }
 }(window)

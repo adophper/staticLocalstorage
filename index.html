@@ -5,12 +5,18 @@
     <title>Title</title>
 </head>
 <body>
-<p>test-localStorage</p>
+<p>test2-localStorage</p>
 <!--<script src="/static/mallHtml/js/jquery-2.1.0.js"></script>-->
 <script src="/static/js/core.js"></script>
 <script>
-    lsFile('http://127.0.0.2/static/css/style.css?20180123');
-    lsFile('http://127.0.0.2/static/js/test.js?20180123');
+var MODULES = {
+    "http://127.0.0.2/static/css/style.css": "20180123",
+    "/static/js/test.js": "20180123"
+}
+//object
+lsFile(MODULES)
+//string
+lsFile("/static/js/test.js?20180123");
 </script>
 </body>
 </html>
